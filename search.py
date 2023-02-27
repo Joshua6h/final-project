@@ -49,7 +49,7 @@ def expand(problem, node):
         yield Node(state=new_state, parent=node, action=action, path_cost=cost)
 
 
-def breadth_first_search(problem):
+def get_run_expectancy(problem):
     node = (Node(problem.initial), 1)
     total_runs = 0
     if node[1] < problem.min_prob or node[0].state[1] >= 3:
@@ -57,18 +57,27 @@ def breadth_first_search(problem):
     
     frontier = deque([(node[0], 1)])
 
+    total_prob = 0
+
     while frontier:
         node = frontier.pop()
         for child in expand(problem, node[0]):
             # need to increment total runs for each node
+            if (child.action == "P" or child.action == "K") and node[1] * problem.probabilities[child.action] * child.state[1] > 0:
+                s = 2
             total_runs += node[1] * problem.probabilities[child.action] * child.state[1]
             s = (child.state, node[1] * problem.probabilities[child.action])
             # if s[1] < child.action_cost:
             #     return total_runs
+
+            if child.state[0][1] < 3 and (child.state[0][0] == "d" or child.state[0][0] == "f" or child.state[0][0] == "g" or child.state[0][0] == "h"):
+                total_prob += s[1]
                 
             if s[1] > problem.min_prob and child.state[0][1] < 3:
                 child.state = child.state[0]
                 frontier.appendleft((child, s[1]))
-            if child.action == "O":
-                z = 1
+            
+
+    print("Total Prob: " + str(total_prob))
     return total_runs
+
