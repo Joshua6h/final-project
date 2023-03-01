@@ -63,21 +63,63 @@ def get_run_expectancy(problem):
         node = frontier.pop()
         for child in expand(problem, node[0]):
             # need to increment total runs for each node
-            if (child.action == "P" or child.action == "K") and node[1] * problem.probabilities[child.action] * child.state[1] > 0:
-                s = 2
             total_runs += node[1] * problem.probabilities[child.action] * child.state[1]
             s = (child.state, node[1] * problem.probabilities[child.action])
-            # if s[1] < child.action_cost:
-            #     return total_runs
-
-            if child.state[0][1] < 3 and (child.state[0][0] == "d" or child.state[0][0] == "f" or child.state[0][0] == "g" or child.state[0][0] == "h"):
-                total_prob += s[1]
                 
             if s[1] > problem.min_prob and child.state[0][1] < 3:
                 child.state = child.state[0]
                 frontier.appendleft((child, s[1]))
             
-
-    print("Total Prob: " + str(total_prob))
     return total_runs
 
+def get_probabilities(problem):
+    node = (Node(problem.initial), 1)
+    probabilities_dict = {
+        ("a", 0): 0,
+        ("a", 1): 0,
+        ("a", 2): 0,
+        ("b", 0): 0,
+        ("b", 1): 0,
+        ("b", 2): 0,
+        ("c", 0): 0,
+        ("c", 1): 0,
+        ("c", 2): 0,
+        ("d", 0): 0,
+        ("d", 1): 0,
+        ("d", 2): 0,
+        ("e", 0): 0,
+        ("e", 1): 0,
+        ("e", 2): 0,
+        ("f", 0): 0,
+        ("f", 1): 0,
+        ("f", 2): 0,
+        ("g", 0): 0,
+        ("g", 1): 0,
+        ("g", 2): 0,
+        ("h", 0): 0,
+        ("h", 1): 0,
+        ("h", 2): 0,
+    }
+    
+    frontier = deque([(node[0], 1)])
+
+    while frontier:
+        node = frontier.pop()
+        for child in expand(problem, node[0]):
+            # need to increment total runs for each node
+            if child.state[0][1] < 3:
+                probabilities_dict[child.state[0]] += node[1] * problem.probabilities[child.action]
+            s = (child.state, node[1] * problem.probabilities[child.action])
+                
+            if s[1] > problem.min_prob and child.state[0][1] < 3:
+                child.state = child.state[0]
+                frontier.appendleft((child, s[1]))
+        
+    total_prob = 0
+    for item in probabilities_dict.items():
+        total_prob += item[1]
+
+    for item in probabilities_dict.items():
+        probabilities_dict[item[0]] = probabilities_dict[item[0]] / total_prob
+
+    return probabilities_dict
