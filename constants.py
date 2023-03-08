@@ -1,3 +1,24 @@
+# Results dictionary is the dictionary giving the possible results of each state
+# A state is an ordered pair of a base state and number of outs
+# "a": nobody on
+# "b": runner on first
+# "c": runner on second
+# "d": runner on third
+# "e": runners on first and second
+# "f": runners on first and third
+# "g": runners on second and third
+# "h": bases loaded
+# The key value pairs are a state and a dictionary of outcomes and new states
+# "O": out
+# "P": productive out - means a runner would score from third with less than two outs
+# "K": strikeout - currently not being used
+# "W": walk
+# "S": single
+# "D": double
+# "T": triple
+# "H": home run
+# Details on assumptions are listed in the README
+
 result_dictionary = {
         # nobody on, 0 outs
     ("a", 0): {

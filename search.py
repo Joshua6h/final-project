@@ -1,7 +1,4 @@
-from argparse import _ActionsContainer
 from collections import deque
-import math
-from unittest import result
 
 class Node:
     def __init__(self, state, parent=None, action=None, path_cost=0):
@@ -21,9 +18,6 @@ class Node:
 
     def __lt__(self, other):
         return self.path_cost < other.path_cost
-
-failure = Node('failure', path_cost=math.inf)
-cutoff = Node('cutoff', path_cost=math.inf)
 
 class Problem:
     def __init__(self, initial, min_prob, result, actions, action_cost, probabilities):
@@ -48,30 +42,30 @@ def expand(problem, node):
         cost = node.path_cost + problem.action_cost(state, action, new_state)
         yield Node(state=new_state, parent=node, action=action, path_cost=cost)
 
-
+# returns run expectancy of a specific game state
 def get_run_expectancy(problem):
     node = (Node(problem.initial), 1)
     total_runs = 0
-    if node[1] < problem.min_prob or node[0].state[1] >= 3:
-        return total_runs
     
     frontier = deque([(node[0], 1)])
-
-    total_prob = 0
 
     while frontier:
         node = frontier.pop()
         for child in expand(problem, node[0]):
-            # need to increment total runs for each node
+            # multiply the runs scored on the action by the probability of that action occuring in that game state
+            # add this to the total runs
             total_runs += node[1] * problem.probabilities[child.action] * child.state[1]
             s = (child.state, node[1] * problem.probabilities[child.action])
                 
+            # if the inning is not over in this state and the probability is not too low, add the new state to the frontier
             if s[1] > problem.min_prob and child.state[0][1] < 3:
                 child.state = child.state[0]
                 frontier.appendleft((child, s[1]))
             
     return total_runs
 
+# return a dictionary of the relative probabilities of being in a specific game state
+# probabilities must add up to 1
 def get_probabilities(problem):
     node = (Node(problem.initial), 1)
     probabilities_dict = {
@@ -106,7 +100,6 @@ def get_probabilities(problem):
     while frontier:
         node = frontier.pop()
         for child in expand(problem, node[0]):
-            # need to increment total runs for each node
             if child.state[0][1] < 3:
                 probabilities_dict[child.state[0]] += node[1] * problem.probabilities[child.action]
             s = (child.state, node[1] * problem.probabilities[child.action])
