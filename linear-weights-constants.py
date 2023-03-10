@@ -66,16 +66,17 @@ if __name__ == '__main__':
 
     # Actual linear weights - 2015
     linear_weights_constants = {"W": .3, "S": .44, "D": .74, "T": 1.01, "H": 1.39, "O": -.26}
-    mike_trout_raa = calculate_raa(linear_weights_constants, mike_trout)
-    print("Mike Trout actual linear weights: " + str(mike_trout_raa))
+    print("Actual linear weights constants from 2015:")
+    print(linear_weights_constants)
 
 
     # My 2015 linear weights constants
     probabilities = create_test_season(14073, 1602, 42106, 8242, 939, 4909, 183628)
     linear_weights_constants = get_linear_weights_constants(10e-8, probabilities)
+    print("My linear weights:")
     print(linear_weights_constants)
     mike_trout_raa = calculate_raa(linear_weights_constants, mike_trout)
-    print("Mike Trout my linear weights: " + str(mike_trout_raa))
+    print("Mike Trout: " + str(mike_trout_raa))
 
     # Martin Maldonado 2015 - actual RAA = -4
     martin_maldonado = create_test_case(24, 48, 7, 0, 4, 229)

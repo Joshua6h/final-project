@@ -36,3 +36,19 @@ This program will calculate wOBA based on a league's stats over an entire season
     - A productive out in all other situations will not advance runners
     - All regular outs will not advance runners
     - In all other situations, an event will advance the runner as many bases as the batter advances
+
+
+## Functions of Interest
+### search.py
+- get_run_expectancy takes in a problem class and returns the run expectancy for the remainder of that inning
+- get_probabilities takes in a problem and returns the relative probabilities of being in a certain game state. The total probability for all game states adds up to one
+
+### re24.py
+Running this file returns the run expectancy matrix for MLB from 2010-2015
+- get_re24_matrix returns a dictionary of all 24 game states and their run expectancies
+- get_run_scoring_environment returns an ordered pair of a re24 matrix and the probabilities of being in each of the 24 game states
+
+### linear-weights-constants.py
+Running this file outputs fangraphs linear weights constants from the 2015 MLB season and my algorithms constants from that season. It also outputs my calculation of Mike Trout and Martin Maldonado's runs above average from that season. Finally, it outputs the linear weights constants and two players runs above average from the 2022 Rock River League season.
+- get_linear_weights_constants takes in a minimum probability and a dictionary with the probability of each event and returns a dictionary of linear weights constants
+- calculate_raa takes in a dictionary of linear weights and a player's stats dictionary and returns that players runs above average
