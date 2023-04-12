@@ -53,6 +53,20 @@ def create_test_season(w, hbp, hits, doubles, triples, hr, pa):
     probabilities["O"] = .98 * (total_outs) / pa
     return probabilities
 
+def create_season(ab, singles, doubles, triples, hrs, walks):
+    pa = ab + walks
+    probabilities = {"W": 0, "S": 0, "D": 0, "T": 0, "H": 0, "O": 0, "P": 0}
+    probabilities["W"] = (walks) / pa
+    probabilities["S"] = singles / pa
+    probabilities["D"] = doubles / pa
+    probabilities["T"] = triples / pa
+    probabilities["H"] = hrs / pa
+    total_outs = pa - singles - doubles - triples - hrs - walks
+    # assume 2% of outs score runner from third
+    probabilities["P"] = .02 * (total_outs) / pa
+    probabilities["O"] = .98 * (total_outs) / pa
+    return probabilities
+
 if __name__ == '__main__':
     # 2010-2015 MLB environment
     probabilities = {"W": .0895, "S": .1556, "D": .0456, "T": .0048, "H": .0255, "O": .6648, "P": .0141}
