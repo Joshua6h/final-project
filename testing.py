@@ -33,5 +33,15 @@ class TestSearch(unittest.TestCase):
         self.assertLess(run_expectancyB, run_expectancyA)
 
 
+class TestRE24(unittest.TestCase):
+
+    def test_results(self):
+        result = re24.result(("b", 2), "O")
+        self.assertEqual((("b", 3), 0), result)
+
+        result = re24.result(("c", 1), "S")
+        self.assertEqual((("b", 1), 1), result)
+
+
 if __name__ == '__main__':
     unittest.main()
