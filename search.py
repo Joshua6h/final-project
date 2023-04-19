@@ -64,9 +64,12 @@ def get_run_expectancy(problem):
             
     return total_runs
 
-# return a dictionary of the relative probabilities of being in a specific game state
-# probabilities must add up to 1
+
 def get_probabilities(problem):
+    """
+    return a dictionary of the relative probabilities of being in a specific game state
+    probabilities must add up to 1
+    """
     node = (Node(problem.initial), 1)
     probabilities_dict = {
         ("a", 0): 0,

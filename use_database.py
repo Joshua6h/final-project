@@ -3,12 +3,11 @@ import parsestats
 import linear_weights_constants
 
 def create_league_table(filename):
+    """Uses a csv to create a database table with the same name as that csv"""
     try:
         # Making a connection between sqlite3 database and Python Program
         sqliteConnection = sqlite3.connect('baseball_data.db')
-        # If sqlite3 makes a connection with python program then it will print "Connected to SQLite"
-        # Otherwise it will show errors
-        print("Connected to SQLite")
+        print("Creating league table")
 
         cursor_obj = sqliteConnection.cursor()
         cursor_obj.execute(f"DROP TABLE IF EXISTS {filename}")
@@ -28,8 +27,6 @@ def create_league_table(filename):
         );
         """
         cursor_obj.execute(table)
-
-        # select_top_5_players(filename)
         
         players = parsestats.parse_data(filename + '.csv')
         i = 0
@@ -47,21 +44,17 @@ def create_league_table(filename):
         sqliteConnection.commit()
 
     except sqlite3.Error as error:
-        print("Failed to connect with sqlite3 database", error)
+        print("Failed to create league table", error)
     finally:
         # Inside Finally Block, If connection is open, we need to close it
         if sqliteConnection:
             # using close() method, we will close the connection
             sqliteConnection.close()
-            # After closing connection object, we will print "the sqlite connection is closed"
-            print("the sqlite connection is closed")
+
 
 def select_top_5_players(table_name):
-        # Making a connection between sqlite3 database and Python Program
+        """Helper function to view top five players of a table"""
         sqliteConnection = sqlite3.connect('baseball_data.db')
-        # If sqlite3 makes a connection with python program then it will print "Connected to SQLite"
-        # Otherwise it will show errors
-        print("Connected to SQLite")
 
         cursor_obj = sqliteConnection.cursor()
 
@@ -69,23 +62,20 @@ def select_top_5_players(table_name):
         SELECT * FROM {table_name}
         """
         cursor_obj.execute(select_string)
-        output = cursor_obj.fetchone()
         output = cursor_obj.fetchall()
         print(output[0][2])
 
         if sqliteConnection:
-            # using close() method, we will close the connection
             sqliteConnection.close()
-            # After closing connection object, we will print "the sqlite connection is closed"
-            print("the sqlite connection is closed")
 
 
 def get_league_stats(table_name):
+        """Creates a season environment using all the players in a given table"""
         # Making a connection between sqlite3 database and Python Program
         sqliteConnection = sqlite3.connect('baseball_data.db')
         # If sqlite3 makes a connection with python program then it will print "Connected to SQLite"
         # Otherwise it will show errors
-        print("Connected to SQLite")
+        print("Getting league wide stats")
 
         cursor_obj = sqliteConnection.cursor()
 
@@ -95,24 +85,18 @@ def get_league_stats(table_name):
         cursor_obj.execute(select_string)
 
         output = cursor_obj.fetchall()
-        print(output)
         probabilities = linear_weights_constants.create_season(output[0][0], output[0][1], output[0][2], output[0][3], output[0][4], output[0][5])
 
         if sqliteConnection:
-            # using close() method, we will close the connection
             sqliteConnection.close()
-            # After closing connection object, we will print "the sqlite connection is closed"
-            print("the sqlite connection is closed")
 
         return probabilities
 
 
 def get_all_players(table_name):
-        # Making a connection between sqlite3 database and Python Program
+        """Returns player objects for all players in a database"""
         sqliteConnection = sqlite3.connect('baseball_data.db')
-        # If sqlite3 makes a connection with python program then it will print "Connected to SQLite"
-        # Otherwise it will show errors
-        print("Connected to SQLite")
+        print("Getting players from the database")
 
         cursor_obj = sqliteConnection.cursor()
 
@@ -122,20 +106,16 @@ def get_all_players(table_name):
         cursor_obj.execute(select_string)
 
         output = cursor_obj.fetchall()
-        print(output)
         
         players = []
 
         for row in output:
-            player = parsestats.Player(row[1], row[2], row[3] + row[4] + row[5] + row[6], row[4], row[5], row[6], row[7], 0, id = row[0])
+            player = parsestats.Player(row[1], row[2], row[3] + row[4] + row[5] + row[6], row[4], row[5], row[6], row[7], 0, RAA=row[8], wOBA=row[9], id = row[0])
             players.append(player)
 
 
         if sqliteConnection:
-            # using close() method, we will close the connection
             sqliteConnection.close()
-            # After closing connection object, we will print "the sqlite connection is closed"
-            print("the sqlite connection is closed")
 
         return players
     
@@ -150,4 +130,3 @@ if __name__ == "__main__":
          print(player)
     # name = name.replace("'", "\'")
     # dbeaver community
-

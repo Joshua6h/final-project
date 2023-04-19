@@ -10,8 +10,9 @@ def result(state, action):
 def action_cost(state, action, new_state):
     return 0
 
-# Helper function to create a dictionary of all 24 possible states and the run expectancy for each state
+
 def get_re24_matrix(problem):
+    """Helper function to create a dictionary of all 24 possible states and the run expectancy for each state"""
     re_matrix = {
         ("a", 0): 0,
         ("a", 1): 0,
@@ -45,8 +46,9 @@ def get_re24_matrix(problem):
 
     return re_matrix
 
-# function to return ordered pair of run expectancy matrix dictionary and state probability dictionary
+
 def get_run_scoring_environment(min_prob, probabilities):
+    """function to return ordered pair of run expectancy matrix dictionary and state probability dictionary"""
     problem = search.Problem(("a", 0), min_prob, result, actions, action_cost, probabilities)
     re24_matrix = get_re24_matrix(problem)
     problem.initial = ("a", 0)

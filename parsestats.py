@@ -1,6 +1,7 @@
 import csv
 
 class Player:
+    """Class to keep track of an individual player and all pertinents stats of that player"""
     def __init__(self, name, at_bats, hits, doubles, triples, home_runs, walks, hit_by_pitches, RAA = 0, wOBA = 0, id = 0):
         self.name = name
         self.at_bats = int(at_bats)
@@ -18,6 +19,7 @@ class Player:
 
 
 def parse_data(filename):
+    """Function to parse a csv and return a list of player objects"""
     fields = []
     rows = []
 
