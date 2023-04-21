@@ -1,8 +1,8 @@
 import re24
 import constants
 
-# function to calculate linear weights constants
 def get_linear_weights_constants(min_prob, probabilities):
+    """function to calculate linear weights constants"""
     run_scoring_environment = re24.get_run_scoring_environment(min_prob, probabilities)
     re24matrix = run_scoring_environment[0]
     probs_matrix = run_scoring_environment[1]
@@ -27,20 +27,23 @@ def get_linear_weights_constants(min_prob, probabilities):
 
     return linear_weights
 
-# helper function to calculate runs above average using the linear weights constants
+
 def calculate_raa(linear_weights_constants, outcomes):
+    """helper function to calculate runs above average using the linear weights constants"""
     raa = 0
     for outcome in outcomes:
         raa += linear_weights_constants[outcome] * outcomes[outcome]
 
     return raa
 
-# helper function to create a test case for a player
+
 def create_test_case(walks, hits, doubles, triples, hr, ab):
+    """helper function to create a test case for a player"""
     return {"W": walks, "S": hits - doubles - triples - hr, "D": doubles, "T": triples, "H": hr, "O": ab - hits}
 
-# helper function to create the run scoring environment for a season
+
 def create_test_season(w, hbp, hits, doubles, triples, hr, pa):
+    """helper function to create the run scoring environment for a season"""
     probabilities = {"W": 0, "S": 0, "D": 0, "T": 0, "H": 0, "O": 0, "P": 0}
     probabilities["W"] = (w + hbp) / pa
     probabilities["S"] = (hits - doubles - triples - hr) / pa
@@ -48,6 +51,21 @@ def create_test_season(w, hbp, hits, doubles, triples, hr, pa):
     probabilities["T"] = triples / pa
     probabilities["H"] = hr / pa
     total_outs = pa - hits - w -hbp
+    # assume 2% of outs score runner from third
+    probabilities["P"] = .02 * (total_outs) / pa
+    probabilities["O"] = .98 * (total_outs) / pa
+    return probabilities
+
+def create_season(ab, singles, doubles, triples, hrs, walks):
+    """helper function to create the run scoring environment for a season"""
+    pa = ab + walks
+    probabilities = {"W": 0, "S": 0, "D": 0, "T": 0, "H": 0, "O": 0, "P": 0}
+    probabilities["W"] = (walks) / pa
+    probabilities["S"] = singles / pa
+    probabilities["D"] = doubles / pa
+    probabilities["T"] = triples / pa
+    probabilities["H"] = hrs / pa
+    total_outs = pa - singles - doubles - triples - hrs - walks
     # assume 2% of outs score runner from third
     probabilities["P"] = .02 * (total_outs) / pa
     probabilities["O"] = .98 * (total_outs) / pa
