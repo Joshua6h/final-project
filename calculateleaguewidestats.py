@@ -118,9 +118,5 @@ def update_all_stats(table_name):
      
 
 if __name__ == "__main__":
-    #  update_player_raa("rock_2022")
-    #  league_woba = get_league_woba("rock_2022")
-    #  print(league_woba)
-    #  update_player_woba("rock_2022")
-
+                                         
      update_all_stats("rock_2022")

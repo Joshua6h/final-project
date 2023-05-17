@@ -1,4 +1,5 @@
 import csv
+import alchemy
 
 class Player:
     """Class to keep track of an individual player and all pertinents stats of that player"""
@@ -22,30 +23,28 @@ def parse_data(filename):
     """Function to parse a csv and return a list of player objects"""
     fields = []
     rows = []
+    try:
+        with open(filename, 'r') as csvfile:
+            csvreader = csv.reader(csvfile)
 
-    with open(filename, 'r') as csvfile:
-        csvreader = csv.reader(csvfile)
+            fields = next(csvreader)
+            if fields[0] != "Player" or fields[1] != "AB" or fields[2] != "H" or fields[3] != "2B" or fields[4] != "3B" or fields[5] != "HR" or fields[6] != "BB" or fields[7] != "HBP":
+                print("Invalid file format")
+                return False
 
-        fields = next(csvreader)
+            for row in csvreader:
+                rows.append(row)
 
-        for row in csvreader:
-            rows.append(row)
+            players = []
+            i = alchemy.getMaxId() + 1
+            for col in rows:
+                new_player = Player(col[0], col[1], col[2], col[3], col[4], col[5], col[6], col[7], id = i)
+                players.append(new_player)
+                i += 1
+    except:
+        print("Error parsing file " + filename)
+        return False
 
-        print("Total no. of rows: %d"%csvreader.line_num)
-        print("Field names are:" + ', '.join(field for field in fields))
-        print("First five rows are:\n")
-        for row in rows[:5]:
-            for col in row:
-                print(col),
-            print('\n')
-
-        players = []
-        for col in rows:
-            new_player = Player(col[0], col[1], col[2], col[3], col[4], col[5], col[6], col[7])
-            players.append(new_player)
-
-        for player in players[:5]:
-            print(player)
 
     return players
 
